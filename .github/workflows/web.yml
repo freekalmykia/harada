@@ -39,7 +39,7 @@ jobs:
         run: |
           mkdir ../build
           cp -TR ./build ../build
-          tar -cvf ../deploy.tar ../build/
+          tar -czvf ../deploy.tar ../build/
       - name: Copy TAR file to a2hosting
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -60,4 +60,4 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           password: ${{ secrets.DEPLOY_PASS }}
           script: |
-            tar -xvf ~/harada/web_dist/deploy.tar ~/harada/web
+            tar -xvf ~/harada/web_dist/deploy.tar -C ~/harada/web
