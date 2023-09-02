@@ -19,6 +19,9 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     container: node:18
+    defaults:
+      run:
+        working-directory: ./web
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -28,7 +31,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-        working-directory: ./web
       - run: npm i
       - run: npm run build
         env:
@@ -36,7 +38,7 @@ jobs:
       - name: Deploy package to a2hosting
         uses: garygrossgarten/github-action-scp@release
         with:
-          local: web/build
+          local: build
           remote: ~/harada/web
           host: ${{ secrets.DEPLOY_HOST }}
           port: ${{ secrets.DEPLOY_PORT }}
