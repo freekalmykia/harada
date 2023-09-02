@@ -35,12 +35,17 @@ jobs:
       - run: npm run build
         env:
           CI: false
-      - name: Deploy package to a2hosting
+      - name: Create TAR file
+        run: |
+          mkdir ../build
+          cp -TR ./build ../build
+          tar -cvf deploy.tar ../build/
+      - name: Deploy to a2hosting
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           port: ${{ secrets.DEPLOY_PORT }}
           username: ${{ secrets.DEPLOY_USER }}
           password: ${{ secrets.DEPLOY_PASS }}
-          source: "build/*"
-          target: "~/harada/web"
+          source: "deploy.tar"
+          target: "~/harada/web/"
