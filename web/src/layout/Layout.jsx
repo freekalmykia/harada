@@ -1,9 +1,9 @@
 import { Link, Outlet } from "react-router-dom"
 
-export default function() {
+export default function Layout() {
   return (
     <div>
-      <h1 className="text-3xl">Twitter</h1>
+      <h1 className="text-3xl">Harada</h1>
       <nav>
         <ul>
           <li>
