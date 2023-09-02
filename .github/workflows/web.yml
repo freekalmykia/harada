@@ -38,7 +38,7 @@ jobs:
       - name: Create Tar file
         run: |
           mkdir ../build
-          cp -TR . ../build
+          cp -TR ./build ../build
           tar -cvf deploy.tar ../build/
       - name: Deploy to a2hosting
         uses: appleboy/scp-action@v0.1.4
@@ -48,7 +48,7 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
           passphrase: ${{ secrets.DEPLOY_PASS }}
-          source: "web/build/deploy.tar"
+          source: "web/deploy.tar"
           target: "~/harada/web/"
           overwrite: true
           rm: true
