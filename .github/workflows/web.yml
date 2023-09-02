@@ -60,4 +60,4 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           password: ${{ secrets.DEPLOY_PASS }}
           script: |
-            tar -xcf ~/harada/web_dist/deploy.tar ~/harada/web
+            tar -xvf ~/harada/web_dist/deploy.tar ~/harada/web
