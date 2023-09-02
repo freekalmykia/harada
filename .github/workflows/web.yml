@@ -39,8 +39,8 @@ jobs:
         run: |
           mkdir ../build
           cp -TR ./build ../build
-          tar -cvf deploy.tar ../build/
-      - name: Deploy to a2hosting
+          tar -cvf ../deploy.tar ../build/
+      - name: Copy TAR file to a2hosting
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.DEPLOY_HOST }}
@@ -48,7 +48,16 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
           passphrase: ${{ secrets.DEPLOY_PASS }}
-          source: "web/deploy.tar"
-          target: "~/harada/web/"
+          source: "deploy.tar"
+          target: "~/harada/web_dist/"
           overwrite: true
           rm: true
+      - name: Unpack Tar file into web folder
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          username: ${{ secrets.DEPLOY_USER }}
+          password: ${{ secrets.DEPLOY_PASS }}
+          script: |
+            tar -xcf ~/harada/web_dist/deploy.tar ~/harada/web
