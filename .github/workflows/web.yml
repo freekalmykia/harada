@@ -40,6 +40,7 @@ jobs:
           mkdir ../build
           cp -TR ./build ../build
           tar -cvf deploy.tar ../build/
+          ls -la
       - name: Deploy to a2hosting
         uses: appleboy/scp-action@v0.1.4
         with:
