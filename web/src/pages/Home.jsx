@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import Post from "../components/Post";
 
-export default function Home() {
+export default function Home(props) {
 
   const [posts, setPosts] = useState([]);
 
@@ -24,7 +24,7 @@ export default function Home() {
   }, [])
 
   return (
-    <div>
+    <div className="mb-20">
       { renderPosts(posts) }
     </div>
   )
