@@ -16,7 +16,7 @@ export default function Home(props) {
   }
 
   useEffect(() => {
-    getPosts('http://localhost:3000/mockdata/posts.json')
+    getPosts('/mockdata/posts.json')
       .then(posts => {
         setPosts(posts);
       })
