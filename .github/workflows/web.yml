@@ -1,0 +1,66 @@
+name: Build and Deploy
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the main branch
+on:
+  push:
+    branches: [web-release]
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    container: node:18
+    defaults:
+      run:
+        working-directory: ./web
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - name: Build React App
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: npm i
+      - run: npm run build
+        env:
+          CI: false
+      - name: Create Tar file
+        run: |
+          mkdir ../build
+          cp -TR ./build ../build
+          tar -czvf ../deploy.tar ../build/
+      - name: Copy TAR file to a2hosting
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.DEPLOY_PASS }}
+          source: "deploy.tar"
+          target: "~/harada/web_dist/"
+          overwrite: true
+          rm: true
+      - name: Unpack Tar file into web folder
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          username: ${{ secrets.DEPLOY_USER }}
+          password: ${{ secrets.DEPLOY_PASS }}
+          script: |
+            tar -xvf ~/harada/web_dist/deploy.tar -C ~/harada/web_dist
+            rm -rf ~/harada/web/*
+            mv ~/harada/web_dist/build/* ~/harada/web/
+            rm -rf ~/harada/web_dist/build
