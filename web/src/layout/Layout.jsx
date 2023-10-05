@@ -1,8 +1,28 @@
-import { Link, Outlet } from "react-router-dom"
+import { useEffect } from "react";
+import { Link, Outlet, Navigate, useNavigate, useLocation } from "react-router-dom"
 import { Avatar, Logo } from "../components/shared";
+import { useAuth, useUser } from "@clerk/clerk-react";
 
 export default function Layout(props) {
   const { profile } = props;
+  const { isLoaded, isSignedIn, signOut } = useAuth();
+  const { ...user } = useUser();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  window.signOut = signOut;
+
+  useEffect(() => {
+    if (location.pathname === '/') {
+      console.log('user: ', user);
+      navigate('/home');
+    }
+  }, [location])
+
+  if (!isLoaded || !isSignedIn) {
+    return <Navigate to="/signin" />
+  }
+
   return (
     <div>
       <header className="border-b mb-3">
