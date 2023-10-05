@@ -1,5 +1,5 @@
 export default function Post(props) {
-  console.log(props);
+  console.log('props: ', props);
 
   const renderText = post => {
     return <p>{ post.text }</p>
